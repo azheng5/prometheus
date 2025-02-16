@@ -10,7 +10,7 @@ rho0 = 0.02; % kg/m^3
 g = 3.71; % m/s^2
 
 % EDL design parameters
-gamma = [5:0.1:15] .* (pi/180); % flight path angle (rad)
+gamma = [1:0.1:10] .* (pi/180); % flight path angle (rad)
 gamma0 = 10 .* (pi/180);
 m = 100; % mass (kg)
 r_b = 1; % radius of base (m)
@@ -64,6 +64,8 @@ for i = 1:length(time)
     a(i) = log.a;
 end
 
+
+
 figure(1)
 plot(gamma*(180/pi),q_dot_s_max)
 xlabel('Flight path angle (deg)')
@@ -98,11 +100,6 @@ figure(7)
 plot(time,state(:,3) .* (180/pi))
 xlabel('Time (sec)')
 ylabel('Flight path angle (deg)')
-
-figure(8)
-plot(time,a)
-xlabel('Time (sec)')
-ylabel('Acceleration (m/s^2)')
 
 
 % function rho = calc_rho(h,H)
