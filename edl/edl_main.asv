@@ -69,8 +69,8 @@ xlabel('Time (sec)')
 ylabel('Heat rate')
 
 %% Compute thickness
-% v_atm = [1600:1:3600]; % reentry velocity (m/s)
-[h_n_max, n_max, q_dot_s_max, J_s] = compute_performance(5*(pi/180), 4000);
+v_atm = [1600:1:3600]; % reentry velocity (m/s)
+[h_n_max, n_max, q_dot_s_max, J_s] = compute_performance(5*(pi/180), v_atm);
 [q_dot_s_max_sim index] = max(q_dot);
 q_dot_s_max_alt = state(index,1);
 q_dot_s_max_vel = state(index,2); % m/s
@@ -92,15 +92,18 @@ Tupstream = T;
 R = 8314/44.01;
 gamma = 1.29;
 M = q_dot_s_max_vel/sqrt(gamma * R * Tupstream)
-Tdownstream = Tupstream * (((2*gamma*M^2-(gamma-1))*((gamma-1)*M^2+2))/((gamma+1)^2*(M^2)))
-Tsurf = Tdownstream
+Tdownstream = Tupstream * ()/())
 
 % q_dot_rad = emissivity * stefanBoltzmannConst * Tsurf.^4
-heatFluxIn = q_dot_s_max % - q_dot_rad
+heatFluxIn = q_dot_s_max*10^4 % - q_dot_rad
 k = 1.63; % PICA - 1.63; SLA - 0.0576
 Tvehicle = 150 + 273; % assume bondline temp of 150 degrees C
 thickness = -k * (Tvehicle - Tsurf) ./ heatFluxIn
 % q_dot_s_max
+
+
+
+
 
 
 
