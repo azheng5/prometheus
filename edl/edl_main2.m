@@ -40,29 +40,29 @@ ylabel('Heat shield thickness (m)')
 %%
 
 gamma = [1:0.1:80] .* (pi/180); % flight path angle (rad)
-v_atm = 3000;
+v_atm = 5000;
 
 [h_n_max, n_max, q_dot_s_max, J_s] = compute_performance(gamma, v_atm);
 
 
 figure(6)
 plot(gamma * (180/pi),q_dot_s_max)
-xlabel('Flight path angle (m/s)')
+xlabel('Flight path angle (deg)')
 ylabel('Peak heating rate (W/cm^2)')
 
 figure(7)
 plot(gamma * (180/pi),J_s)
-xlabel('Flight path angle (m/s)')
+xlabel('Flight path angle (deg)')
 ylabel('Total heat load (W/cm^2)')
 
 figure(8)
 plot(gamma * (180/pi),h_n_max)
-xlabel('Flight path angle (m/s)')
+xlabel('Flight path angle (deg)')
 ylabel('Altitude of peak deceleration (m)')
 
 figure(9)
 plot(gamma * (180/pi),n_max)
-xlabel('Flight path angle (m/s)')
+xlabel('Flight path angle (deg)')
 ylabel('Peak deceleration (m/s^2)')
 
 

@@ -2,7 +2,7 @@ clear;clc;close all
 
 k = 1.9027e-4;
 H = 11100; % m
-h0 = 57000;
+h0 = 100000;
 mu_mars = 4.282837e13; % grav param of mars
 R_mars = 3390e3; % radius of mars
 r_orbiter = 370000 + R_mars;
@@ -13,7 +13,7 @@ gamma0 = 10 .* (pi/180);
 m = 200; % mass (kg)
 r_b = 2; % radius of base (m)
 A = pi*r_b; % reference area
-v_atm = 3000; % reentry velocity (m/s)
+v_atm = 3300; % reentry velocity (m/s)
 r_n = 0.1; % radius of nosecone (m)
 C_p_max = 2;
 delta_c = 60 * (pi/180); % degrees - assume will change with more design
@@ -70,7 +70,7 @@ ylabel('Heat rate')
 
 %% Compute thickness
 % v_atm = [1600:1:3600]; % reentry velocity (m/s)
-[h_n_max, n_max, q_dot_s_max, J_s] = compute_performance(5*(pi/180), 4000);
+[h_n_max, n_max, q_dot_s_max, J_s] = compute_performance(10*(pi/180), 3300);
 [q_dot_s_max_sim index] = max(q_dot);
 q_dot_s_max_alt = state(index,1);
 q_dot_s_max_vel = state(index,2); % m/s
@@ -99,10 +99,15 @@ Tsurf = Tdownstream
 heatFluxIn = q_dot_s_max % - q_dot_rad
 k = 1.63; % PICA - 1.63; SLA - 0.0576
 Tvehicle = 150 + 273; % assume bondline temp of 150 degrees C
-thickness = -k * (Tvehicle - Tsurf) ./ heatFluxIn
+% thickness = -k * (Tvehicle - Tsurf) ./ heatFluxIn
 % q_dot_s_max
 
-
+% full energy method
+rhoTPS = 0.265e3; %PICA - 0.265e3; SLA - 0.288e3 kg/m^3
+CpTPS = 1625; %PICA - 1625; SLA - 1120 J/(kg*K)
+maxT = 2200; %PICA - 2200; SLA - 2200 K
+startingT = 200; % subject to change
+thickness = max(cumtrapz(q_dot))/(rhoTPS*CpTPS*(maxT - startingT))
 
 %% Local function
 function [h_n_max, n_max, q_dot_s_max, J_s] = compute_performance(gamma, v_atm)
@@ -140,7 +145,7 @@ q_dot_s_max = (k ./ sqrt(r_n)) * ((beta .* sin(gamma) ./ (3 * H)).^0.5) .* ((v_a
 % q_dot_s_max = q_dot_s_max./1e4; % W/cm^2
 
 % Total integrated heat load
-J_s = k .* v_atm.^2 .* ((beta*pi*H)./(rho0 .* r_n .* sin(gamma))); % (J/m^2)
+J_s = k .* v_atm.^2 .* ((beta*pi*H)./(rho0 .* r_n .* sin(gamma)))^0.5; % (J/m^2)
 % J_s = J_s./1e4; % (J/cm^2)
 
 

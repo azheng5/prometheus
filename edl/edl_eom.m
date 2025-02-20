@@ -13,13 +13,12 @@ function [x_dot, log] = edl_eom(t,x,config)
     gamma = x(3);
     q_s = x(4);
 
-%     
 
     if h < 7000
         T = -31  - 0.000998 * h;
         p = 0.699 * exp(-0.00009*h);
         rho = p / (0.1921 * (T + 273.15));
-    elseif h > 7000 && h < 46000
+    elseif h > 7000%% &&  h < 46000
         T = -23.4  - 0.00222 * h;
         p = 0.699 * exp(-0.00009*h);
         rho = p / (0.1921 * (T + 273.15));

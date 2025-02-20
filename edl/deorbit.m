@@ -11,7 +11,7 @@ h = 57000;
 
 v_circ = sqrt(mu_m/r_circ);
 
-v_entry = [1500:1:3600];
+v_entry = [1439:1:3600];
 % v_entry = [1000:1:4000];
 r_entry = R_m + h; % re-entry radius
 eps_entry = 0.5.*v_entry.^2 - mu_m ./ r_entry;
