@@ -7,6 +7,7 @@ function [x_dot, log] = edl_eom(t,x,config)
     rho0 = config.rho0;
     k = config.k;
     r_n = config.r_n;
+    m = config.m;
 
     h = x(1);
     v = x(2);
@@ -33,6 +34,8 @@ function [x_dot, log] = edl_eom(t,x,config)
 
     end
 
+%     max_q = 750; % Pa
+
 %     rho = rho0 * exp(-h/H);
 
 
@@ -42,10 +45,24 @@ function [x_dot, log] = edl_eom(t,x,config)
 %     dgammadt = 0;
     dqdt = k * ((rho/r_n)^0.5) * (v^3);
 
+%     C_D_chute = 0.65;
+%     d_chute = 30;
+%     rho = 0.006372042676251;
+%     F_D = 0.5 * rho * (v^2) * C_D_chute * pi* (d_chute/2)^2;
+%     sqrt(max_q/(0.5*rho))
+%     if v < sqrt(max_q/(0.5*rho)) && h < 7000
+%         dhdt = -v;
+%         dvdt = -(1/m)*F_D;
+%     end
+
     x_dot = [dhdt;dvdt;dgammadt;dqdt];
+
+    dynamic_p = 0.5*rho*(v^2);
 
     log.a = dvdt;
     log.q_dot = dqdt;
+    log.dynamic_p = dynamic_p;
+    log.rho = rho;
 
 
 end

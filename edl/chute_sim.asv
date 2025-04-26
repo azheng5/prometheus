@@ -1,0 +1,68 @@
+clear;clc;close all
+
+t_span = 0:0.01:1000;
+h_initial = 6414;
+v_initial = 485.184;
+init_state = [h_initial; v_initial];
+options = odeset('Events',@chute_events);
+chute_sizes = [10 20 30 40 50 60 70];
+log(length(chute_sizes)) = struct();
+states = zeros(length(t_span),2*length(chute_sizes));
+for i = 1:length(chute_sizes)
+    [time, state] = ode45(@(t,x)chute_eom(t,x,chute_sizes(i)), t_span, init_state, options);
+    h_final = state(end,1)
+    v_final = state(end,2)
+
+    log(i).time = time;
+    log(i).state = state;
+end
+
+figure(4)
+for i = 1:length(chute_sizes)
+    plot(log(i).time,log(i).state(:,1))
+    hold on 
+end
+xlabel('Time (sec)')
+ylabel('Altitude (m)')
+legend('10','20','30','40','50')
+
+figure(5)
+for i = 1:length(chute_sizes)
+    plot(log(i).time,log(i).state(:,2))
+    hold on 
+end
+xlabel('Time (sec)')
+ylabel('Velocity (m/s)')
+legend('10','20','30','40','50')
+
+
+function [x_dot] = chute_eom(t,x,d)
+
+    h = x(1);
+    v = x(2);
+
+    H = 11100; % m
+    max_q = 750; % Pa
+    rho0 = 0.02; % kg/m^3
+    rho = rho0 * exp(-h/H);
+    m = 900;
+    CD = 0.65;
+    g_mars = 3.73;
+    A = pi*(d/2)^2;
+    F_D = 0.5 * rho * (v^2) * CD * A;
+
+    dhdt = -v;
+    dvdt = (-1/m)*F_D + g_mars;
+
+    x_dot = [dhdt;dvdt];
+
+end
+
+function [value,isterminal,direction] = chute_events(t,x)
+%rocket_events Called by ode45 to determine various edl events
+    % i.e. capsule hitting ground
+value = x(1)-100; % define event as h = 0
+isterminal = 1;  % stop integration when event happens
+direction = -1;   % only stop if h is decreasing
+
+end
